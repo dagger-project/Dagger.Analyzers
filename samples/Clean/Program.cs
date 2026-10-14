@@ -5,7 +5,9 @@ public static class Program
     public static async Task<int> Main(string[] args)
     {
         var count = await CountAsync(args);
-        Console.WriteLine(Describe(count));
+        var tally = new Count(count) { Label = "items" };
+        _ = new Count.Draft { Title = tally.Label };
+        Console.WriteLine(Describe(tally.Value));
         return 0;
     }
 
@@ -22,4 +24,14 @@ public static class Program
         null => "empty",
         _ => "other",
     };
+
+    private sealed record Count(int Value)
+    {
+        public string Label { get; init; } = "";
+
+        public sealed class Draft
+        {
+            public string Title { get; set; } = "";
+        }
+    }
 }

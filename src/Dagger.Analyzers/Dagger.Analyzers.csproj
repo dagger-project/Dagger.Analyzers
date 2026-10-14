@@ -20,7 +20,7 @@
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
 
     <PackageId>Dagger.Analyzers</PackageId>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <Authors>Dagger contributors</Authors>
     <Product>Dagger.Analyzers</Product>
     <Description>Shared C# analyzers and editorconfig. Enables the SDK recommended rules and bundles Roslynator, Meziantou, threading, async, and disposal analyzers. Open source only.</Description>
@@ -37,6 +37,7 @@
     not flow through a normal dependency anyway.
   -->
   <ItemGroup>
+    <ProjectReference Include="..\Dagger.Analyzers.CSharp\Dagger.Analyzers.CSharp.csproj" ReferenceOutputAssembly="false" PrivateAssets="all" />
     <PackageReference Include="Roslynator.Analyzers" Version="5.0.1" PrivateAssets="all" GeneratePathProperty="true" />
     <PackageReference Include="Meziantou.Analyzer" Version="3.0.299" PrivateAssets="all" GeneratePathProperty="true" />
     <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="18.12.1" PrivateAssets="all" GeneratePathProperty="true" />
@@ -61,6 +62,7 @@
         Roslynator build in the unversioned folder so it loads beside whichever
         versioned folder is chosen.
       -->
+      <_DaggerOwnAnalyzer Include="$(MSBuildProjectDirectory)/../Dagger.Analyzers.CSharp/bin/$(Configuration)/netstandard2.0/Dagger.Analyzers.CSharp.dll" />
       <_DaggerRoslynator Include="$(PkgRoslynator_Analyzers)/analyzers/dotnet/roslyn5.0/cs/*.dll" />
       <_DaggerBundledAnalyzer Include="$(PkgMeziantou_Analyzer)/analyzers/**/*.dll" Exclude="$(PkgMeziantou_Analyzer)/analyzers/**/*.resources.dll" />
       <_DaggerBundledAnalyzer Include="$(PkgMicrosoft_VisualStudio_Threading_Analyzers)/analyzers/**/*.dll" Exclude="$(PkgMicrosoft_VisualStudio_Threading_Analyzers)/analyzers/**/*.resources.dll" />
@@ -75,8 +77,10 @@
 
     <Error Condition="'@(_DaggerBundledAnalyzer)' == ''" Text="No analyzer assemblies were found to pack." />
     <Error Condition="!Exists('$(PkgRoslynator_Analyzers)/analyzers')" Text="Roslynator analyzers were not restored." />
+    <Error Condition="!Exists('%(_DaggerOwnAnalyzer.Identity)')" Text="Dagger.Analyzers.CSharp was not built." />
 
     <ItemGroup>
+      <None Include="@(_DaggerOwnAnalyzer)" Pack="true" PackagePath="analyzers/dotnet/cs/%(Filename)%(Extension)" />
       <None Include="@(_DaggerBundledAnalyzer)" Pack="true" PackagePath="analyzers/%(RecursiveDir)%(Filename)%(Extension)" />
       <None Include="@(_DaggerRoslynator)" Pack="true" PackagePath="analyzers/dotnet/cs/%(Filename)%(Extension)" />
       <None Include="@(_DaggerThreadingFiles)" Pack="true" PackagePath="build/threading/%(Filename)%(Extension)" />

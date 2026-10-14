@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/Dagger.Analyzers/Dagger.Analyzers.csproj" />
+    <Project Path="src/Dagger.Analyzers.CSharp/Dagger.Analyzers.CSharp.csproj" />
   </Folder>
   <Folder Name="/samples/">
     <Project Path="samples/Clean/Clean.csproj" />

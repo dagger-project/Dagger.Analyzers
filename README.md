@@ -10,7 +10,7 @@ In a project, or in `Directory.Build.props` so every project in the repo picks i
 
 ```xml
 <ItemGroup>
-  <PackageReference Include="Dagger.Analyzers" Version="0.1.0" PrivateAssets="all" />
+  <PackageReference Include="Dagger.Analyzers" Version="0.1.1" PrivateAssets="all" />
 </ItemGroup>
 ```
 
@@ -18,7 +18,7 @@ With Central Package Management:
 
 ```xml
 <ItemGroup>
-  <PackageVersion Include="Dagger.Analyzers" Version="0.1.0" />
+  <PackageVersion Include="Dagger.Analyzers" Version="0.1.1" />
 </ItemGroup>
 ```
 
@@ -60,8 +60,13 @@ These assemblies are bundled in the package. Upstream licenses are in `NOTICE`.
 | [AsyncFixer](https://github.com/semihokur/AsyncFixer) 2.1.0 | Forgotten awaits, async void, and other async mistakes |
 | [IDisposableAnalyzers.Reloaded](https://www.nuget.org/packages/IDisposableAnalyzers.Reloaded) 5.0.0 | `IDisposable` / `IAsyncDisposable` leaks. Maintained fork of the original package |
 | [BannedApiAnalyzers](https://www.nuget.org/packages/Microsoft.CodeAnalysis.BannedApiAnalyzers) 5.6.0 | Blocks `Thread.Sleep`, `Task.Result`, `Task.Wait`, `GC.Collect`, and `BinaryFormatter` |
+| Dagger.Analyzers.CSharp | `DAG0001`: a record property or indexer must not declare `set` |
 
 Pattern matching is a warning: `is` plus a cast, `as` plus a null check, and `not` patterns. Switch expressions are a suggestion, because they are not always the simpler form.
+
+## Records
+
+`DAG0001` warns when a property or indexer declared on a record uses `set`, including `private set`. `init` and get-only members stay valid, so a positional record and a `with` expression keep working. A class nested inside a record can still use `set`.
 
 Performance rules promoted to warning: `CA1826`, `CA1827`, `CA1828`, `CA1829`, `CA1836`, `CA1860`, `CA1861`, `CA1869`, `CA1849`, `CA2016`, `CA2012`, `CA2024`, and Roslynator `RCS1198` (unnecessary boxing).
 
@@ -105,7 +110,7 @@ Pull requests and pushes to `main` run that script on the .NET 11 SDK pinned in 
 
 ## Publish
 
-Push a tag that matches `<Version>` in the project, such as `v0.1.0`. The release workflow verifies the package and publishes that nupkg to nuget.org. A prerelease version such as `0.2.0-preview.1` is tagged `v0.2.0-preview.1`.
+Push a tag that matches `<Version>` in the project, such as `v0.1.1`. The release workflow verifies the package and publishes that nupkg to nuget.org. A prerelease version such as `0.2.0-preview.1` is tagged `v0.2.0-preview.1`.
 
 nuget.org needs a Trusted Publishing policy for this repository before the first push:
 

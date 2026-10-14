@@ -30,6 +30,7 @@ required=(
   RS0030
   IDISP001
   CA1829
+  DAG0001
 )
 missing=0
 for code in "${required[@]}"; do

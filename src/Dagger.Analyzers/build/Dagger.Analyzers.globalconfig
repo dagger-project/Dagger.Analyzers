@@ -169,6 +169,10 @@ dotnet_diagnostic.IDE0020.severity = warning
 dotnet_diagnostic.IDE0078.severity = warning
 dotnet_diagnostic.IDE0083.severity = suggestion
 
+# ---- Records --------------------------------------------------------------------------
+# init and get-only members stay valid. set, including private set, does not.
+dotnet_diagnostic.DAG0001.severity = warning
+
 # ---- Complexity -----------------------------------------------------------------------
 # CA1502's threshold is CodeMetricsConfig.txt (CA1502: 20), not an editorconfig key.
 dotnet_diagnostic.CA1502.severity = warning

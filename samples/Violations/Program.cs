@@ -85,4 +85,15 @@ public static class Examples
             }
         }
     }
+
+    public sealed record MutableScore
+    {
+        public int Value { get; private set; }
+
+        public int this[int index]
+        {
+            get => Value;
+            set => Value = value;
+        }
+    }
 }
