@@ -1,0 +1,4 @@
+# CA1502 fires when cyclomatic complexity is greater than this value.
+# The SDK default is 25. A project can override this by adding its own
+# AdditionalFile named CodeMetricsConfig.txt.
+CA1502: 20

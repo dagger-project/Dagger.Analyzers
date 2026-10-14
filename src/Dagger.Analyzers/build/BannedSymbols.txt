@@ -1,0 +1,13 @@
+# APIs that block threads, hide failures, or are unsafe. Opt out with
+# <DaggerAnalyzersBannedSymbols>false</DaggerAnalyzersBannedSymbols>
+# and add a project BannedSymbols.txt for anything else you want to forbid.
+
+T:System.Runtime.Serialization.Formatters.Binary.BinaryFormatter; binary serialization is unsafe
+M:System.Threading.Thread.Sleep(System.Int32); blocks a thread; await Task.Delay instead
+M:System.Threading.Thread.Sleep(System.TimeSpan); blocks a thread; await Task.Delay instead
+P:System.Threading.Tasks.Task`1.Result; blocks and can deadlock; await the task
+M:System.Threading.Tasks.Task.Wait; blocks and can deadlock; await the task
+M:System.Threading.Tasks.Task.Wait(System.Int32); blocks and can deadlock; await the task
+M:System.Threading.Tasks.Task.Wait(System.TimeSpan); blocks and can deadlock; await the task
+M:System.GC.Collect; forces a collection; let the GC decide
+M:System.GC.Collect(System.Int32); forces a collection; let the GC decide

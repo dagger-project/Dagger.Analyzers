@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Dagger.Analyzers/Dagger.Analyzers.csproj" />
+  </Folder>
+  <Folder Name="/samples/">
+    <Project Path="samples/Clean/Clean.csproj" />
+    <Project Path="samples/Violations/Violations.csproj" />
+  </Folder>
+</Solution>

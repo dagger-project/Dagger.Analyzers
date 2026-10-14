@@ -1,0 +1,25 @@
+<Project>
+
+  <PropertyGroup>
+    <!-- Only fills in values the project has not already chosen. -->
+    <EnableNETAnalyzers Condition="'$(EnableNETAnalyzers)' == ''">true</EnableNETAnalyzers>
+    <AnalysisLevel Condition="'$(AnalysisLevel)' == ''">latest-recommended</AnalysisLevel>
+    <AnalysisMode Condition="'$(AnalysisMode)' == ''">Recommended</AnalysisMode>
+    <EnforceCodeStyleInBuild Condition="'$(EnforceCodeStyleInBuild)' == ''">true</EnforceCodeStyleInBuild>
+    <Nullable Condition="'$(Nullable)' == ''">enable</Nullable>
+    <ImplicitUsings Condition="'$(ImplicitUsings)' == ''">enable</ImplicitUsings>
+    <LangVersion Condition="'$(LangVersion)' == ''">latest</LangVersion>
+    <!-- IDE0005 (unused usings) is a build warning only when this is set. CS1591 stays off; docs are not required. -->
+    <GenerateDocumentationFile Condition="'$(GenerateDocumentationFile)' == ''">true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Set to false to skip the shared BannedSymbols.txt. -->
+    <DaggerAnalyzersBannedSymbols Condition="'$(DaggerAnalyzersBannedSymbols)' == ''">true</DaggerAnalyzersBannedSymbols>
+    <!-- Opt in for a new codebase: <DaggerAnalyzersTreatWarningsAsErrors>true</DaggerAnalyzersTreatWarningsAsErrors> -->
+    <TreatWarningsAsErrors Condition="'$(DaggerAnalyzersTreatWarningsAsErrors)' == 'true'">true</TreatWarningsAsErrors>
+    <CodeAnalysisTreatWarningsAsErrors Condition="'$(DaggerAnalyzersTreatWarningsAsErrors)' == 'true'">true</CodeAnalysisTreatWarningsAsErrors>
+  </PropertyGroup>
+
+</Project>

@@ -1,0 +1,25 @@
+<Project>
+
+  <ItemGroup>
+    <!--
+      EditorConfigFiles, not only GlobalAnalyzerConfigFiles. The SDK adds its
+      recommended style config as an EditorConfig file, and those beat global
+      configs. This file is is_global, so it still covers every source file,
+      and its global_level beats the SDK default.
+    -->
+    <EditorConfigFiles Include="$(MSBuildThisFileDirectory)Dagger.Analyzers.globalconfig" />
+    <EditorConfigFiles Include="$(MSBuildThisFileDirectory)Dagger.Analyzers.editorconfig" />
+    <GlobalAnalyzerConfigFiles Include="$(MSBuildThisFileDirectory)Dagger.Analyzers.globalconfig" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(DaggerAnalyzersBannedSymbols)' == 'true'">
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)BannedSymbols.txt" Visible="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)threading/*" Visible="false" />
+    <!-- CA1502 reads this file by name. The editorconfig threshold key is ignored. -->
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)CodeMetricsConfig.txt" Visible="false" />
+  </ItemGroup>
+
+</Project>

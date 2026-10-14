@@ -1,0 +1,24 @@
+Dagger.Analyzers bundles unmodified analyzer assemblies so a project can take
+one package reference. Those assemblies are not relicensed.
+
+Roslynator.Analyzers 5.0.1
+  Apache-2.0. https://github.com/dotnet/roslynator
+
+Meziantou.Analyzer 3.0.299
+  MIT. See licenses/Meziantou.Analyzer.LICENSE.txt.
+  https://github.com/meziantou/Meziantou.Analyzer
+
+Microsoft.VisualStudio.Threading.Analyzers 18.12.1
+  MIT. See licenses/Microsoft.VisualStudio.Threading.Analyzers.NOTICE.txt.
+  https://github.com/microsoft/vs-threading
+
+AsyncFixer 2.1.0
+  Apache-2.0. https://github.com/semihokur/AsyncFixer
+
+IDisposableAnalyzers.Reloaded 5.0.0
+  MIT. https://www.nuget.org/packages/IDisposableAnalyzers.Reloaded
+  Fork of IDisposableAnalyzers by Johan Larsson and milleniumbug.
+
+Microsoft.CodeAnalysis.BannedApiAnalyzers 5.6.0
+  MIT. See licenses/Microsoft.CodeAnalysis.BannedApiAnalyzers.ThirdPartyNotices.txt.
+  https://github.com/dotnet/roslyn

@@ -1,0 +1,88 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <NoWarn>$(NoWarn);CS2008</NoWarn>
+    <IncludeSymbols>false</IncludeSymbols>
+    <IsPackable>true</IsPackable>
+    <Nullable>disable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    <RunAnalyzers>false</RunAnalyzers>
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+
+    <PackageId>Dagger.Analyzers</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Dagger contributors</Authors>
+    <Product>Dagger.Analyzers</Product>
+    <Description>Shared C# analyzers and editorconfig. Enables the SDK recommended rules and bundles Roslynator, Meziantou, threading, async, and disposal analyzers. Open source only.</Description>
+    <PackageTags>analyzers;roslyn;csharp;editorconfig;code-style</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Copyright>Copyright (c) Dagger contributors</Copyright>
+  </PropertyGroup>
+
+  <!--
+    Restored only so their analyzer assemblies can be copied into this package.
+    They are not dependencies of the nupkg: one PackageReference is enough,
+    including for Central Package Management. Development dependencies would
+    not flow through a normal dependency anyway.
+  -->
+  <ItemGroup>
+    <PackageReference Include="Roslynator.Analyzers" Version="5.0.1" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="Meziantou.Analyzer" Version="3.0.299" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="18.12.1" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="AsyncFixer" Version="2.1.0" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="IDisposableAnalyzers.Reloaded" Version="5.0.0" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="5.6.0" PrivateAssets="all" GeneratePathProperty="true" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="build\**\*" Pack="true" PackagePath="build\" />
+    <None Include="build\**\*" Pack="true" PackagePath="buildTransitive\" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\LICENSE" Pack="true" PackagePath="\" />
+    <None Include="..\..\NOTICE" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <Target Name="IncludeBundledAnalyzers" BeforeTargets="_GetPackageFiles">
+    <ItemGroup>
+      <!--
+        Roslynator ships only through Roslyn 5.0. Meziantou also ships 5.6 and 5.9,
+        and the compiler loads just one of those version folders. Put the Roslyn 5.0
+        Roslynator build in the unversioned folder so it loads beside whichever
+        versioned folder is chosen.
+      -->
+      <_DaggerRoslynator Include="$(PkgRoslynator_Analyzers)/analyzers/dotnet/roslyn5.0/cs/*.dll" />
+      <_DaggerBundledAnalyzer Include="$(PkgMeziantou_Analyzer)/analyzers/**/*.dll" Exclude="$(PkgMeziantou_Analyzer)/analyzers/**/*.resources.dll" />
+      <_DaggerBundledAnalyzer Include="$(PkgMicrosoft_VisualStudio_Threading_Analyzers)/analyzers/**/*.dll" Exclude="$(PkgMicrosoft_VisualStudio_Threading_Analyzers)/analyzers/**/*.resources.dll" />
+      <_DaggerBundledAnalyzer Include="$(PkgAsyncFixer)/analyzers/**/*.dll" Exclude="$(PkgAsyncFixer)/analyzers/**/*.resources.dll" />
+      <_DaggerBundledAnalyzer Include="$(PkgIDisposableAnalyzers_Reloaded)/analyzers/**/*.dll" Exclude="$(PkgIDisposableAnalyzers_Reloaded)/analyzers/**/*.resources.dll" />
+      <_DaggerBundledAnalyzer Include="$(PkgMicrosoft_CodeAnalysis_BannedApiAnalyzers)/analyzers/**/*.dll" Exclude="$(PkgMicrosoft_CodeAnalysis_BannedApiAnalyzers)/analyzers/**/*.resources.dll" />
+      <_DaggerThreadingFiles Include="$(PkgMicrosoft_VisualStudio_Threading_Analyzers)/buildTransitive/AdditionalFiles/*" />
+      <_DaggerLicense Include="$(PkgMeziantou_Analyzer)/LICENSE.txt" PackagePath="licenses/Meziantou.Analyzer.LICENSE.txt" />
+      <_DaggerLicense Include="$(PkgMicrosoft_VisualStudio_Threading_Analyzers)/NOTICE" PackagePath="licenses/Microsoft.VisualStudio.Threading.Analyzers.NOTICE.txt" />
+      <_DaggerLicense Include="$(PkgMicrosoft_CodeAnalysis_BannedApiAnalyzers)/ThirdPartyNotices.txt" PackagePath="licenses/Microsoft.CodeAnalysis.BannedApiAnalyzers.ThirdPartyNotices.txt" />
+    </ItemGroup>
+
+    <Error Condition="'@(_DaggerBundledAnalyzer)' == ''" Text="No analyzer assemblies were found to pack." />
+    <Error Condition="!Exists('$(PkgRoslynator_Analyzers)/analyzers')" Text="Roslynator analyzers were not restored." />
+
+    <ItemGroup>
+      <None Include="@(_DaggerBundledAnalyzer)" Pack="true" PackagePath="analyzers/%(RecursiveDir)%(Filename)%(Extension)" />
+      <None Include="@(_DaggerRoslynator)" Pack="true" PackagePath="analyzers/dotnet/cs/%(Filename)%(Extension)" />
+      <None Include="@(_DaggerThreadingFiles)" Pack="true" PackagePath="build/threading/%(Filename)%(Extension)" />
+      <None Include="@(_DaggerThreadingFiles)" Pack="true" PackagePath="buildTransitive/threading/%(Filename)%(Extension)" />
+      <None Include="@(_DaggerLicense)" Pack="true" PackagePath="%(_DaggerLicense.PackagePath)" />
+    </ItemGroup>
+  </Target>
+
+</Project>
