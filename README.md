@@ -100,3 +100,20 @@ Set `AnalysisLevel`, `Nullable`, `ImplicitUsings`, or any `dotnet_diagnostic.*.s
 ```sh
 eng/verify.sh
 ```
+
+Pull requests and pushes to `main` run that script on the .NET 11 SDK pinned in `global.json`.
+
+## Publish
+
+Push a tag that matches `<Version>` in the project, such as `v0.1.0`. The release workflow verifies the package and publishes that nupkg to nuget.org. A prerelease version such as `0.2.0-preview.1` is tagged `v0.2.0-preview.1`.
+
+nuget.org needs a Trusted Publishing policy for this repository before the first push:
+
+| Field | Value |
+| --- | --- |
+| Repository owner | `dagger-project` |
+| Repository | `Dagger.Analyzers` |
+| Workflow file | `release.yml` |
+| Environment | `nuget` |
+
+The repository variable `NUGET_USER` is the nuget.org profile name. The workflow exchanges a GitHub token for a short-lived NuGet API key, so the repository does not store one.

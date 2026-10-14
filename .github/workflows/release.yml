@@ -1,0 +1,78 @@
+name: Release
+
+# Verifies the package and, for a v* tag that matches <Version> in the project,
+# publishes that nupkg to nuget.org.
+# Run it by hand (Actions → Release → Run workflow) to verify without publishing.
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - id: version
+        name: Require the tag to match the project version
+        run: |
+          version="$(sed -n 's|.*<Version>\(.*\)</Version>.*|\1|p' src/Dagger.Analyzers/Dagger.Analyzers.csproj)"
+          if [[ "$GITHUB_REF_TYPE" == tag && "${GITHUB_REF_NAME#v}" != "$version" ]]; then
+            echo "::error::Tag ${GITHUB_REF_NAME} does not match project version $version."
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      - name: Build, pack, and check the samples
+        run: ./eng/verify.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nupkg
+          path: artifacts/Dagger.Analyzers.${{ steps.version.outputs.version }}.nupkg
+          if-no-files-found: error
+
+  publish:
+    if: github.ref_type == 'tag'
+    needs: verify
+    runs-on: ubuntu-latest
+    environment: nuget
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: nupkg
+          path: packages
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: NuGet login (OIDC → short-lived API key)
+        id: login
+        uses: NuGet/login@v1
+        with:
+          user: ${{ vars.NUGET_USER }}
+      - name: Push to nuget.org
+        env:
+          NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
+        run: dotnet nuget push packages/*.nupkg --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
+      - name: GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.verify.outputs.version }}
+        run: >
+          gh release create "$GITHUB_REF_NAME" packages/*.nupkg
+          --repo "$GITHUB_REPOSITORY" --title "Dagger.Analyzers $VERSION" --generate-notes
+          $([[ "$VERSION" == *-* ]] && echo --prerelease)
