@@ -10,7 +10,7 @@ In a project, or in `Directory.Build.props` so every project in the repo picks i
 
 ```xml
 <ItemGroup>
-  <PackageReference Include="Dagger.Analyzers" Version="0.1.1" PrivateAssets="all" />
+  <PackageReference Include="Dagger.Analyzers" Version="0.1.2" PrivateAssets="all" />
 </ItemGroup>
 ```
 
@@ -18,7 +18,7 @@ With Central Package Management:
 
 ```xml
 <ItemGroup>
-  <PackageVersion Include="Dagger.Analyzers" Version="0.1.1" />
+  <PackageVersion Include="Dagger.Analyzers" Version="0.1.2" />
 </ItemGroup>
 ```
 
@@ -72,7 +72,7 @@ Performance rules promoted to warning: `CA1826`, `CA1827`, `CA1828`, `CA1829`, `
 
 Complexity: cyclomatic complexity `CA1502` warns above 20. That number is `CA1502: 20` in the packaged `CodeMetricsConfig.txt`. Add your own additional file with that name to use a different threshold. Roslynator `RCS1208` warns when an `if` can be inverted so the nested block sits at a shallower level. Maintainability index and class coupling stay suggestions.
 
-`ConfigureAwait(false)` is a suggestion (`VSTHRD111`), not a warning. Application code on modern .NET should not be forced to add it. Library projects that want it as a warning can set `dotnet_diagnostic.VSTHRD111.severity = warning` in their editorconfig.
+`ConfigureAwait(false)` (`VSTHRD111`) is silent. It is not required for most APIs on modern .NET. Library projects that want it can set `dotnet_diagnostic.VSTHRD111.severity = warning` in their editorconfig.
 
 Joinable Task Factory rules (`VSTHRD001`, `VSTHRD004`, `VSTHRD010`–`VSTHRD012`) are off. They apply to Visual Studio extensions. Turn them back on in a VS SDK project.
 
@@ -110,7 +110,7 @@ Pull requests and pushes to `main` run that script on the .NET 11 SDK pinned in 
 
 ## Publish
 
-Push a tag that matches `<Version>` in the project, such as `v0.1.1`. The release workflow verifies the package and publishes that nupkg to nuget.org. A prerelease version such as `0.2.0-preview.1` is tagged `v0.2.0-preview.1`.
+Push a tag that matches `<Version>` in the project, such as `v0.1.2`. The release workflow verifies the package and publishes that nupkg to nuget.org. A prerelease version such as `0.2.0-preview.1` is tagged `v0.2.0-preview.1`.
 
 nuget.org needs a Trusted Publishing policy for this repository before the first push:
 

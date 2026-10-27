@@ -20,7 +20,7 @@
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
 
     <PackageId>Dagger.Analyzers</PackageId>
-    <Version>0.1.1</Version>
+    <Version>0.1.2</Version>
     <Authors>Dagger contributors</Authors>
     <Product>Dagger.Analyzers</Product>
     <Description>Shared C# analyzers and editorconfig. Enables the SDK recommended rules and bundles Roslynator, Meziantou, threading, async, and disposal analyzers. Open source only.</Description>

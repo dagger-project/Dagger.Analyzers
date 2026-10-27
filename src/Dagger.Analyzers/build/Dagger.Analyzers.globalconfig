@@ -149,7 +149,7 @@ dotnet_diagnostic.VSTHRD113.severity = warning
 dotnet_diagnostic.VSTHRD114.severity = warning
 dotnet_diagnostic.VSTHRD104.severity = suggestion
 # ConfigureAwait(false) is a library concern. Applications on modern .NET should not be forced into it.
-dotnet_diagnostic.VSTHRD111.severity = suggestion
+dotnet_diagnostic.VSTHRD111.severity = silent
 dotnet_diagnostic.CA2007.severity = none
 dotnet_diagnostic.MA0004.severity = none
 
